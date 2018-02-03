@@ -1,6 +1,7 @@
 const React = require('react')
+const createReactClass = require('create-react-class')
 
-module.exports = React.createClass({
+module.exports = createReactClass({
   displayName: 'App',
 
   // getInitialState :: {error :: String}

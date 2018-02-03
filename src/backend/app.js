@@ -9,7 +9,17 @@ app.set('port', 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
-app.use(express.static(path.resolve(__dirname, '../../public')));
+app.use(express.static(path.join(__dirname, '../../public')));
+// app.use(express.static('./public'));
+
+var webpack = require('webpack')
+var webpackDevMiddleware = require('webpack-dev-middleware')
+var webpackHotMiddleware = require('webpack-hot-middleware')
+var config = require('../../webpack.config')
+var compiler = webpack(config)
+
+app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
+app.use(webpackHotMiddleware(compiler));
 
 const main = () => {
   server(app)

@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 var config = {
   entry: {
     build: './src/frontend/js/main.js',
-    vendors: ['jquery']
+    vendors: ['jquery'],
   },
 
   resolve: {
@@ -24,7 +24,7 @@ var config = {
 
     // WP2 Depreciated - needs one argument.
     new webpack.optimize.CommonsChunkPlugin( {name: 'vendors', filename: 'vendors.js', minChunks: Infinity} ),
-   
+
     new webpack.LoaderOptionsPlugin({
       options: {
          eslint: {
@@ -39,11 +39,13 @@ var config = {
       'window.jquery': 'jquery'
     }),
     // WP2 replaced 'NoErrorsPlugin'.
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ],
 output: {
-   filename: '[name].bundle.js',
-   path: path.resolve(__dirname, './public')
+   filename: 'bundle.js',
+   path: path.join(__dirname, './public'),
+   publicPath: '/'
   },
   //WP2 output: {
   //WP2   path: './public',
@@ -55,12 +57,12 @@ output: {
       {test: /\.js[x]?$/,
         exclude: /node_modules/,
         //WP2 be specific.
-        loader: 'react-hot-loader'
+        loader: 'react-hot-loader/webpack'
       },
       {
         test: /\.js[x]?$/,
         exclude: /node_modules/,
-        // WP2 be specific. 
+        // WP2 be specific.
         loader: 'babel-loader?presets[]=react,presets[]=es2015'
       },
       { test: /\.css$/, loader: 'style!css' },
@@ -76,10 +78,12 @@ output: {
   },
 
   devServer: {
-    contentBase: './public',
+    contentBase: path.join(__dirname, "./public"),
     historyApiFallback: true,
-    proxy: { '*': 'http://localhost:3000' }
+    // proxy: { '*': 'http://localhost:3000' }
   },
+
+  devtool: 'inline-source-map'
 
 };
 
