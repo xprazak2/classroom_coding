@@ -1,11 +1,12 @@
 const React = require('react')
 const createReactClass = require('create-react-class')
 const { flickerSearch } = require('./model')
+const DragImage = require('./drag_image')
 
 module.exports = createReactClass({
   displayName: 'Flickr',
 
-  // getInitialState :: {term :: String, results :: [Url]}
+  // getInitialState :: {term :: String, results :: [Photo]}
   getInitialState() { return {term: "", results: []} },
 
   // termChanged :: Event -> State Results
@@ -14,8 +15,11 @@ module.exports = createReactClass({
   updateResults(xs) { this.setState({ results: xs }) },
 
   searchClicked(_) { flickerSearch(this.state.term).fork(this.props.showError, this.updateResults) },
+
+  onDragStart({dataTransfer: dt, currentTarget: t}) { dt.setData('text', t.src) },
+
   render() {
-    const imgs = this.state.results.map(src => <img src={src} key={src} />)
+    const imgs = this.state.results.map(p => <DragImage src={p.src} />)
     return (
       <div id="flickr">
         <input onChange={this.termChanged}/>
